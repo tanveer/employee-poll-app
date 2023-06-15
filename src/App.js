@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { useState, useEff } from "react";
+import { useEffect } from "react";
+import { _getUsers } from "./_DATA";
+import Login from "./component/Login";
+import { connect } from "react-redux";
+import { getAllUsers } from "./component/usersActions";
 
-function App() {
+function App({ users, currentUser, dispatch }) {
+  useEffect(() => {
+    const getUsers = async () => {
+      const users = await _getUsers();
+      dispatch(getAllUsers(users));
+    };
+    getUsers();
+  }, {});
+
+  const usersArr = Object.values(users);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {users && <Login />}
+      {users &&
+        usersArr.map(
+          (user) =>
+            user.id === currentUser.loginUser && (
+              <img
+                style={{ width: 150, borderRadius: 150 }}
+                src={users[currentUser.loginUser].avatarURL}
+              />
+            )
+        )}
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    users: state.users.users,
+    currentUser: state.loginUser,
+  };
+};
+export default connect(mapStateToProps)(App);
