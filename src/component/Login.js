@@ -22,17 +22,15 @@ function Login({ users, dispatch, currentUser }) {
   };
 
   const handleLogout = () => {
-    if (currentUser.loginUser !== null) {
-      setUserId("");
-      dispatch(loginUser(""));
-    }
+    setUserId("");
+    dispatch(loginUser(null));
   };
 
   return (
     <div>
       <p className="h2">Login</p>
       <div>
-        <select defaultValue={id} onChange={handleSelectUser}>
+        <select value={id} onChange={handleSelectUser}>
           <option value="" disabled>
             Select user
           </option>
@@ -42,12 +40,8 @@ function Login({ users, dispatch, currentUser }) {
             ))}
         </select>
         {id !== "" && (
-          <button
-            onClick={
-              currentUser.loginUser !== null ? handleLogout : handleLogin
-            }
-          >
-            {currentUser.loginUser !== null ? "Logout" : "login"}
+          <button onClick={currentUser.loginUser ? handleLogout : handleLogin}>
+            {currentUser.loginUser ? "Logout" : "Login"}
           </button>
         )}
       </div>

@@ -1,19 +1,24 @@
-import logo from "./logo.svg";
 import "./App.css";
-import { useState, useEff } from "react";
 import { useEffect } from "react";
-import { _getUsers } from "./_DATA";
+import { _getQuestions, _getUsers } from "./_DATA";
 import Login from "./component/Login";
 import { connect } from "react-redux";
 import { getAllUsers } from "./component/usersActions";
+import getAllQuestions from "./component/questionActions";
 
-function App({ users, currentUser, dispatch }) {
+function App({ users, currentUser, questions, dispatch }) {
+  const getQuestions = async () => {
+    const questions = await _getQuestions();
+    dispatch(getAllQuestions(questions));
+  };
+
   useEffect(() => {
     const getUsers = async () => {
       const users = await _getUsers();
       dispatch(getAllUsers(users));
     };
     getUsers();
+    getQuestions();
   }, {});
 
   const usersArr = Object.values(users);
@@ -31,6 +36,14 @@ function App({ users, currentUser, dispatch }) {
               />
             )
         )}
+
+      {currentUser.loginUser && questions && (
+        <ul>
+          {questions.map(
+            (q) => q.optionTwo.votes.length && <li>{q.optionOne.text}</li>
+          )}
+        </ul>
+      )}
     </div>
   );
 }
@@ -39,6 +52,7 @@ const mapStateToProps = (state) => {
   return {
     users: state.users.users,
     currentUser: state.loginUser,
+    questions: Object.values(state.questions.questions),
   };
 };
 export default connect(mapStateToProps)(App);
