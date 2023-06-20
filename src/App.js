@@ -3,8 +3,14 @@ import { useEffect } from "react";
 import { _getQuestions, _getUsers } from "./_DATA";
 import Login from "./component/Login";
 import { connect } from "react-redux";
-import { getAllUsers } from "./component/usersActions";
-import getAllQuestions from "./component/questionActions";
+import { getAllUsers } from "./component/Redux/usersActions";
+import { getAllQuestions } from "./component/Redux/questionActions";
+import { Layout } from "antd";
+import Navbar from "./component/Navbar";
+import Card from "./component/Card";
+import Home from "./component/Home";
+import { Routes, Route } from "react-router-dom";
+import NewPoll from "./component/NewPoll";
 
 function App({ users, currentUser, questions, dispatch }) {
   const getQuestions = async () => {
@@ -12,47 +18,36 @@ function App({ users, currentUser, questions, dispatch }) {
     dispatch(getAllQuestions(questions));
   };
 
+  const getUsers = async () => {
+    const usersObj = await _getUsers();
+    dispatch(getAllUsers(usersObj));
+  };
+
   useEffect(() => {
-    const getUsers = async () => {
-      const users = await _getUsers();
-      dispatch(getAllUsers(users));
-    };
     getUsers();
     getQuestions();
-  }, {});
-
-  const usersArr = Object.values(users);
+    console.log(questions);
+  }, []);
 
   return (
-    <div className="App">
-      {users && <Login />}
-      {users &&
-        usersArr.map(
-          (user) =>
-            user.id === currentUser.loginUser && (
-              <img
-                style={{ width: 150, borderRadius: 150 }}
-                src={users[currentUser.loginUser].avatarURL}
-              />
-            )
-        )}
-
-      {currentUser.loginUser && questions && (
-        <ul>
-          {questions.map(
-            (q) => q.optionTwo.votes.length && <li>{q.optionOne.text}</li>
-          )}
-        </ul>
-      )}
+    <div className="container">
+      {users && <Navbar />}
+      <Routes>
+        <Route
+          path="/new_poll"
+          element={currentUser.loginUser && <NewPoll />}
+        />
+        <Route path="/" element={currentUser.loginUser && <Home />} />
+      </Routes>
     </div>
   );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({ questions, users, loginUser }) => {
   return {
-    users: state.users.users,
-    currentUser: state.loginUser,
-    questions: Object.values(state.questions.questions),
+    questions,
+    users,
+    currentUser: loginUser,
   };
 };
 export default connect(mapStateToProps)(App);

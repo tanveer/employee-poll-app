@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { loginUser } from "./loginActios";
+import { loginUser } from "./Redux/loginActios";
 
 import { _getUsers } from "../_DATA";
 
@@ -18,6 +18,7 @@ function Login({ users, dispatch, currentUser }) {
         ? usersArr.filter(({ id }) => id === target.value)[0].id
         : "";
     setUserId(id);
+    console.log(id);
     // dispatch(loginUser(id));
   };
 
@@ -28,19 +29,27 @@ function Login({ users, dispatch, currentUser }) {
 
   return (
     <div>
-      <p className="h2">Login</p>
-      <div>
-        <select value={id} onChange={handleSelectUser}>
-          <option value="" disabled>
-            Select user
+      <div className="d-flex">
+        <select
+          onChange={handleSelectUser}
+          className="form-select me-2"
+          aria-label={id}
+        >
+          <option key={id} value="">
+            Select a user
           </option>
           {usersArr &&
             usersArr.map((user) => (
-              <option value={user.id}>{user.name}</option>
+              <option key={user.id} value={user.id}>
+                {user.name}
+              </option>
             ))}
         </select>
         {id !== "" && (
-          <button onClick={currentUser.loginUser ? handleLogout : handleLogin}>
+          <button
+            className="btn btn-outline-success me-3"
+            onClick={currentUser.loginUser ? handleLogout : handleLogin}
+          >
             {currentUser.loginUser ? "Logout" : "Login"}
           </button>
         )}
@@ -49,10 +58,10 @@ function Login({ users, dispatch, currentUser }) {
   );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({ users, loginUser }) => {
   return {
-    users: state.users.users,
-    currentUser: state.loginUser,
+    users: users.users,
+    currentUser: loginUser,
   };
 };
 

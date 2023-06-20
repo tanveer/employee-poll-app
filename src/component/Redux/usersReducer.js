@@ -2,16 +2,16 @@ const intialState = {
   users: {},
 };
 
-const usersReducer = (state = intialState, action) => {
-  switch (action.type) {
+const users = (state = intialState, { type, users }) => {
+  switch (type) {
     case "FETCH_USERS":
       return {
         ...state,
-        users: action.payload,
+        users,
       };
     default:
       return state;
   }
 };
 
-export default usersReducer;
+export default users;
