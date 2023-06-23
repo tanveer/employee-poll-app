@@ -1,17 +1,10 @@
-const intialState = {
-  loginUser: null,
-};
-
-const loginUser = (state = intialState, { type, loginUser }) => {
+const authUser = (state = null, { type, authUser }) => {
   switch (type) {
     case "LOGIN_USER":
-      return {
-        ...state,
-        loginUser,
-      };
+      return authUser;
     default:
       return state;
   }
 };
 
-export default loginUser;
+export default authUser;

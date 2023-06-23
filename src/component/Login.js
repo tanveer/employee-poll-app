@@ -4,7 +4,7 @@ import { loginUser } from "./Redux/loginActios";
 
 import { _getUsers } from "../_DATA";
 
-function Login({ users, dispatch, currentUser }) {
+function Login({ users, dispatch, authUser }) {
   const [id, setUserId] = useState("");
   const usersArr = Object.values(users);
 
@@ -18,8 +18,6 @@ function Login({ users, dispatch, currentUser }) {
         ? usersArr.filter(({ id }) => id === target.value)[0].id
         : "";
     setUserId(id);
-    console.log(id);
-    // dispatch(loginUser(id));
   };
 
   const handleLogout = () => {
@@ -48,9 +46,9 @@ function Login({ users, dispatch, currentUser }) {
         {id !== "" && (
           <button
             className="btn btn-outline-success me-3"
-            onClick={currentUser.loginUser ? handleLogout : handleLogin}
+            onClick={authUser ? handleLogout : handleLogin}
           >
-            {currentUser.loginUser ? "Logout" : "Login"}
+            {authUser ? "Logout" : "Login"}
           </button>
         )}
       </div>
@@ -58,10 +56,10 @@ function Login({ users, dispatch, currentUser }) {
   );
 }
 
-const mapStateToProps = ({ users, loginUser }) => {
+const mapStateToProps = ({ users, authUser }) => {
   return {
-    users: users.users,
-    currentUser: loginUser,
+    users,
+    authUser,
   };
 };
 

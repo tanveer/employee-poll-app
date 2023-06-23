@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 const formatDate = (timestamp) => {
   const date = new Date(timestamp);
@@ -17,7 +18,7 @@ const formatDate = (timestamp) => {
   return `${timeStr} | ${day}/${month}/${year}`;
 };
 
-function Card({ currentUser, questions, completed, answers, users, qId }) {
+function Card({ questions, users, qId }) {
   return (
     <div className="card mb-3 me-3" style={{ width: "18rem" }}>
       <img
@@ -30,21 +31,20 @@ function Card({ currentUser, questions, completed, answers, users, qId }) {
         {/* {formatDate(questions[qId].timestamp)} */}
       </h5>
       <div className="card-body align-self-center">
-        <p class="card-text">{questions[qId].text}</p>
-        <a href="#" className="btn btn-primary align-self-center">
+        <p className="card-text">{questions[qId].text}</p>
+        <Link
+          to={`/questions/${qId}`}
+          className="btn btn-primary align-self-center"
+        >
           Show
-        </a>
+        </Link>
       </div>
     </div>
   );
 }
 
-const mapStateToProps = (state) => {
-  const { questions } = state.questions;
-  const { users } = state.users;
-  const { loginUser } = state.loginUser;
-
-  const { answers } = users[loginUser];
+const mapStateToProps = ({ users, questions, authUser }, { qId }) => {
+  const { answers } = users[authUser];
   const selectOptions = Object.values(answers);
   const completed = Object.keys(answers)
     .map((key) => questions[key])
@@ -61,7 +61,7 @@ const mapStateToProps = (state) => {
     completed,
     unanswered,
     answers,
-    currentUser: loginUser,
+    authUser,
     questions,
     users,
   };

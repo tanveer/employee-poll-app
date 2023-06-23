@@ -2,7 +2,7 @@ import { React, useState } from "react";
 import { connect } from "react-redux";
 import Card from "./Card";
 
-function Home({ unanswered, completed, currentUser, questions }) {
+function Home({ unanswered, completed, authUser, questions }) {
   const [showUncompleted, setUncompleted] = useState(false);
 
   const togglePolls = () => {
@@ -12,7 +12,7 @@ function Home({ unanswered, completed, currentUser, questions }) {
     <div className="container">
       <button
         type="button"
-        class="btn btn-primary  mb-5"
+        className="btn btn-primary  mb-5"
         data-bs-toggle="button"
         aria-pressed={showUncompleted}
         onClick={togglePolls}
@@ -20,7 +20,7 @@ function Home({ unanswered, completed, currentUser, questions }) {
         {showUncompleted ? "Unanswered Poll >" : "< Answered Poll"}
       </button>
 
-      {currentUser && showUncompleted ? (
+      {authUser && showUncompleted ? (
         <div className="row">
           <p className="card-text h5">Answered Polls</p>
           {completed.map((qId) => (
@@ -29,6 +29,8 @@ function Home({ unanswered, completed, currentUser, questions }) {
         </div>
       ) : (
         <div className="row">
+          <p className="card-text h5">Unanswered Polls</p>
+
           {unanswered.map((qId) => (
             <Card key={qId} className="col" qId={qId} />
           ))}
@@ -38,12 +40,8 @@ function Home({ unanswered, completed, currentUser, questions }) {
   );
 }
 
-const mapStateToProps = (state) => {
-  const { questions } = state.questions;
-  const { users } = state.users;
-  const { loginUser } = state.loginUser;
-
-  const { answers } = users[loginUser];
+const mapStateToProps = ({ questions, users, authUser }) => {
+  const { answers } = users[authUser];
   const completed = Object.keys(answers)
     .map((key) => questions[key])
     .sort((a, b) => b.timestamp - a.timestamp)
@@ -57,7 +55,7 @@ const mapStateToProps = (state) => {
   return {
     completed,
     unanswered,
-    currentUser: loginUser,
+    authUser,
     questions,
   };
 };

@@ -4,7 +4,7 @@ import { _saveQuestion } from "../_DATA";
 import { useNavigate } from "react-router-dom";
 import { saveNewPollQuestion } from "./Redux/questionActions";
 
-const NewPoll = ({ currentUser, dispatch }) => {
+const NewPoll = ({ authUser, dispatch }) => {
   const [optionOne, setOptionOne] = useState("");
   const [optionTwo, setOptionTwo] = useState("");
 
@@ -28,17 +28,18 @@ const NewPoll = ({ currentUser, dispatch }) => {
     const question = {
       optionOneText: optionOne,
       optionTwoText: optionTwo,
-      author: currentUser,
+      author: authUser,
     };
 
     try {
       const newQuestion = await _saveQuestion(question);
+      console.log(newQuestion);
       dispatch(saveNewPollQuestion(newQuestion));
-      navigate("/"); // send user back to home page
+      // send user back to home page
     } catch (error) {
       console.error(error);
     }
-
+    navigate("/");
     // Reset input fields
     setOptionOne("");
     setOptionTwo("");
@@ -77,11 +78,9 @@ const NewPoll = ({ currentUser, dispatch }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const { loginUser } = state.loginUser;
-
+const mapStateToProps = ({ authUser }) => {
   return {
-    currentUser: loginUser,
+    authUser,
   };
 };
 
