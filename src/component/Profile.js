@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import authUser from "./Redux/loginReducer";
+import authUser from "../Redux/loginReducer";
 
 const Profile = ({ user }) => {
   return (

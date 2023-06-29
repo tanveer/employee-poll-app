@@ -2,7 +2,7 @@ import { React, useState } from "react";
 import { connect } from "react-redux";
 import Card from "./Card";
 
-function Home({ unanswered, completed, authUser, questions }) {
+function Home({ unanswered, completed, authedUser, questions }) {
   const [showUncompleted, setUncompleted] = useState(false);
 
   const togglePolls = () => {
@@ -20,7 +20,7 @@ function Home({ unanswered, completed, authUser, questions }) {
         {showUncompleted ? "Unanswered Poll >" : "< Answered Poll"}
       </button>
 
-      {authUser && showUncompleted ? (
+      {authedUser && showUncompleted ? (
         <div className="row">
           <p className="card-text h5">Answered Polls</p>
           {completed.map((qId) => (
@@ -40,8 +40,9 @@ function Home({ unanswered, completed, authUser, questions }) {
   );
 }
 
-const mapStateToProps = ({ questions, users, authUser }) => {
-  const { answers } = users[authUser];
+const mapStateToProps = ({ questions, users, authedUser }) => {
+  const { answers } = users[authedUser];
+  console.log("Answered: ", answers);
   const completed = Object.keys(answers)
     .map((key) => questions[key])
     .sort((a, b) => b.timestamp - a.timestamp)
@@ -55,7 +56,7 @@ const mapStateToProps = ({ questions, users, authUser }) => {
   return {
     completed,
     unanswered,
-    authUser,
+    authedUser,
     questions,
   };
 };

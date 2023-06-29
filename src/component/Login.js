@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
-import { loginUser } from "./Redux/loginActios";
+import { setAuthedUser } from "../actions/authedUser";
 
-import { _getUsers } from "../_DATA";
-
-function Login({ users, dispatch, authUser }) {
+function Login({ users, dispatch, authedUser }) {
   const [id, setUserId] = useState("");
   const usersArr = Object.values(users);
 
   const handleLogin = () => {
-    dispatch(loginUser(id));
+    dispatch(setAuthedUser(id));
   };
 
   const handleSelectUser = ({ target }) => {
@@ -22,7 +20,7 @@ function Login({ users, dispatch, authUser }) {
 
   const handleLogout = () => {
     setUserId("");
-    dispatch(loginUser(null));
+    dispatch(setAuthedUser(null));
   };
 
   return (
@@ -46,9 +44,9 @@ function Login({ users, dispatch, authUser }) {
         {id !== "" && (
           <button
             className="btn btn-outline-success me-3"
-            onClick={authUser ? handleLogout : handleLogin}
+            onClick={authedUser ? handleLogout : handleLogin}
           >
-            {authUser ? "Logout" : "Login"}
+            {authedUser ? "Logout" : "Login"}
           </button>
         )}
       </div>
@@ -56,10 +54,10 @@ function Login({ users, dispatch, authUser }) {
   );
 }
 
-const mapStateToProps = ({ users, authUser }) => {
+const mapStateToProps = ({ users, authedUser }) => {
   return {
     users,
-    authUser,
+    authedUser,
   };
 };
 

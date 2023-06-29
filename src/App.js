@@ -1,9 +1,7 @@
 import "./App.css";
 import { useEffect } from "react";
-import { _getQuestions, _getUsers } from "./_DATA";
 import { connect } from "react-redux";
-import { getAllUsers } from "./component/Redux/usersActions";
-import { getAllQuestions } from "./component/Redux/questionActions";
+import { handleInitialData } from "./actions/shared";
 import Navbar from "./component/Navbar";
 import Home from "./component/Home";
 import { Routes, Route } from "react-router-dom";
@@ -13,42 +11,46 @@ import Questions from "./component/Questions";
 import Leaderboard from "./component/Leaderboard";
 import Profile from "./component/Profile";
 
-function App({ users, authUser, dispatch }) {
-  const getQuestions = async () => {
-    const questions = await _getQuestions();
-    dispatch(getAllQuestions(questions));
-  };
+function App({ users, authedUser, handleInitialData }) {
 
-  const getUsers = async () => {
-    const usersObj = await _getUsers();
-    dispatch(getAllUsers(usersObj));
-  };
-
+  const getAllData = async () => {
+    await handleInitialData();
+  }
   useEffect(() => {
-    getUsers();
-    getQuestions();
+    getAllData();
+    return (
+      console.log('Done fetching intial data...')
+    )
   }, []);
+
 
   return (
     <div className="container">
-      {users && <Navbar />}
+      { users && <Navbar />}
       <Routes>
-        <Route path="/new_poll" element={authUser && <NewPoll />} />
-        <Route path="/" element={authUser && <Home />} />
-        <Route path="/questions/:id" element={authUser && <PollQuestion />} />
-        <Route path="user/questions" element={authUser && <Questions />} />
-        <Route path="leaderboard" element={authUser && <Leaderboard />} />
-        <Route path="/profile" element={authUser && <Profile />} />
+        <Route path="/new_poll" element={authedUser && <NewPoll />} />
+        <Route path="/" element={authedUser && <Home />} />
+        <Route path="/questions/:id" element={authedUser && <PollQuestion />} />
+        <Route path="user/questions" element={authedUser && <Questions />} />
+        <Route path="leaderboard" element={authedUser && <Leaderboard />} />
+        <Route path="/profile" element={authedUser && <Profile />} />
       </Routes>
     </div>
   );
 }
 
-const mapStateToProps = ({ questions, users, authUser }) => {
+const mapStateToProps = ({ questions, users, authedUser }) => {
   return {
     questions,
     users,
-    authUser,
+    authedUser,
   };
 };
-export default connect(mapStateToProps)(App);
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleInitialData: () => dispatch(handleInitialData()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

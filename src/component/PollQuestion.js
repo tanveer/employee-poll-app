@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { connect } from "react-redux";
-import { _saveQuestionAnswer } from "../_DATA";
 import { useLocation, useNavigate } from "react-router-dom";
-import { updateQuestionAnswer } from "./Redux/questionActions";
-import { updateUserAnswer } from "./Redux/usersActions";
+import { updateQuestionAnswer } from "../Redux/questionActions";
+import { updateUserAnswer } from "../Redux/usersActions";
 
 const PollQuestion = ({
   completed,
   unanswered,
   questions,
-  authUser,
+  authedUser,
   dispatch,
   updateQuestionAnswer,
   updateUserAnswer,
@@ -27,14 +26,14 @@ const PollQuestion = ({
   function saveQuestionAnswer({ authUser, qid, answer }) {
     return (dispatch) => {
       return new Promise((resolve, reject) => {
-        if (!authUser || !qid || !answer) {
+        if (!authedUser || !qid || !answer) {
           reject("Please provide authedUser, qid, and answer");
         }
 
         setTimeout(() => {
           // Update the necessary state here
-          updateQuestionAnswer(authUser, qid, answer);
-          updateUserAnswer(authUser, qid, answer);
+          updateQuestionAnswer(authedUser, qid, answer);
+          updateUserAnswer(authedUser, qid, answer);
 
           resolve(true);
         }, 1000);
@@ -47,7 +46,7 @@ const PollQuestion = ({
 
     try {
       await saveQuestionAnswer({
-        authUser,
+        authedUser,
         qid: qId,
         answer: selectedOption,
       })(dispatch, updateQuestionAnswer, updateUserAnswer);
@@ -103,8 +102,8 @@ const PollQuestion = ({
   );
 };
 
-const mapStateToProps = ({ questions, users, authUser }) => {
-  const { answers } = users[authUser];
+const mapStateToProps = ({ questions, users, authedUser }) => {
+  const { answers } = users[authedUser];
   const completed = Object.keys(answers)
     .map((key) => questions[key])
     .sort((a, b) => b.timestamp - a.timestamp)
@@ -118,7 +117,7 @@ const mapStateToProps = ({ questions, users, authUser }) => {
   return {
     completed,
     unanswered,
-    authUser,
+    authedUser,
     questions,
   };
 };

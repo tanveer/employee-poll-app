@@ -1,10 +1,10 @@
-import { Layout } from "antd";
 import Login from "./Login";
 import { connect } from "react-redux";
-import { loginUser } from "./Redux/loginActios";
 import { Link } from "react-router-dom";
+import { loginUser } from "../Redux/loginActions";
+import { setAuthedUser } from "../actions/authedUser";
 
-function Navbar({ authUser, users, dispatch }) {
+function Navbar({ authedUser, users, dispatch }) {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary mb-5">
       <div className="container-fluid">
@@ -19,7 +19,7 @@ function Navbar({ authUser, users, dispatch }) {
             <li className="nav-item">
               <Link
                 to="/leaderboard"
-                className={authUser ? "nav-link" : "nav-link disabled"}
+                className={authedUser ? "nav-link" : "nav-link disabled"}
               >
                 Leaderboard
               </Link>
@@ -27,29 +27,29 @@ function Navbar({ authUser, users, dispatch }) {
             <li className="nav-item">
               <Link
                 to="/new_poll"
-                className={authUser ? "nav-link" : "nav-link disabled"}
+                className={authedUser ? "nav-link" : "nav-link disabled"}
                 preventScrollReset={true}
               >
                 New Poll
               </Link>
             </li>
           </ul>
-          {authUser === null && (
+          {authedUser === null && (
             <div>
               <Login />
             </div>
           )}
-          {authUser && (
+          {authedUser && (
             <div className="d-inline-flex justify-content-end">
               <p className="display-8 me-3 align-self-end">
-                {users[authUser].name}
+                {users[authedUser].name}
               </p>
 
               <div className="dropdown">
                 <img
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
-                  src={users[authUser].avatarURL}
+                  src={users[authedUser].avatarURL}
                   className="rounded-circle align-self-center"
                   style={{ width: 75 }}
                 />
@@ -68,7 +68,7 @@ function Navbar({ authUser, users, dispatch }) {
                   <li>
                     <button
                       className="btn btn-link dropdown-item"
-                      onClick={() => dispatch(loginUser(null))}
+                      onClick={() => dispatch(setAuthedUser(null))}
                       style={{ color: "blue" }}
                     >
                       Logout
@@ -84,10 +84,10 @@ function Navbar({ authUser, users, dispatch }) {
   );
 }
 
-const mapStateToProps = ({ users, authUser }) => {
+const mapStateToProps = ({ users, authedUser }) => {
   return {
     users,
-    authUser,
+    authedUser
   };
 };
 

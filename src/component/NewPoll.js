@@ -2,9 +2,9 @@ import { useState } from "react";
 import { connect } from "react-redux";
 import { _saveQuestion } from "../_DATA";
 import { useNavigate } from "react-router-dom";
-import { saveNewPollQuestion } from "./Redux/questionActions";
+import { saveNewPollQuestion } from "../Redux/questionActions";
 
-const NewPoll = ({ authUser, dispatch }) => {
+const NewPoll = ({ authedUser, dispatch }) => {
   const [optionOne, setOptionOne] = useState("");
   const [optionTwo, setOptionTwo] = useState("");
 
@@ -28,12 +28,11 @@ const NewPoll = ({ authUser, dispatch }) => {
     const question = {
       optionOneText: optionOne,
       optionTwoText: optionTwo,
-      author: authUser,
+      author: authedUser,
     };
 
     try {
       const newQuestion = await _saveQuestion(question);
-      console.log(newQuestion);
       dispatch(saveNewPollQuestion(newQuestion));
       // send user back to home page
     } catch (error) {
@@ -78,9 +77,9 @@ const NewPoll = ({ authUser, dispatch }) => {
   );
 };
 
-const mapStateToProps = ({ authUser }) => {
+const mapStateToProps = ({ authedUser }) => {
   return {
-    authUser,
+    authedUser,
   };
 };
 

@@ -18,7 +18,7 @@ const formatDate = (timestamp) => {
   return `${timeStr} | ${day}/${month}/${year}`;
 };
 
-function Card({ questions, users, qId }) {
+function Card({ questions, users, qId}) {
   return (
     <div className="card mb-3 me-3" style={{ width: "18rem" }}>
       <img
@@ -28,7 +28,6 @@ function Card({ questions, users, qId }) {
       />
       <h5 className="card-title align-self-center">
         {users[questions[qId].author].name}
-        {/* {formatDate(questions[qId].timestamp)} */}
       </h5>
       <div className="card-body align-self-center">
         <p className="card-text">{questions[qId].text}</p>
@@ -43,8 +42,8 @@ function Card({ questions, users, qId }) {
   );
 }
 
-const mapStateToProps = ({ users, questions, authUser }, { qId }) => {
-  const { answers } = users[authUser];
+const mapStateToProps = ({ users, questions, authedUser }, props) => {
+  const { answers } = users[authedUser];
   const selectOptions = Object.values(answers);
   const completed = Object.keys(answers)
     .map((key) => questions[key])
@@ -61,7 +60,7 @@ const mapStateToProps = ({ users, questions, authUser }, { qId }) => {
     completed,
     unanswered,
     answers,
-    authUser,
+    authedUser,
     questions,
     users,
   };

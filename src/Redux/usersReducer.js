@@ -1,8 +1,8 @@
-import { GET_USERS, UPDATE_USER_ANSWER } from "./constants";
+import { GET_ALL_USERS, UPDATE_USER_ANSWER } from "../actions/users";
 
 const users = (state = {}, action) => {
   switch (action.type) {
-    case GET_USERS:
+    case GET_ALL_USERS:
       return {
         ...state,
         ...action.users,
