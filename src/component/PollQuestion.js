@@ -1,17 +1,14 @@
 import { useState } from "react";
 import { connect } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { updateQuestionAnswer } from "../Redux/questionActions";
-import { updateUserAnswer } from "../Redux/usersActions";
+import { handleUserAnswer } from "../actions/shared";
 
 const PollQuestion = ({
   completed,
-  unanswered,
   questions,
   authedUser,
-  dispatch,
-  updateQuestionAnswer,
-  updateUserAnswer,
+  handleUserAnswer,
+  users
 }) => {
   const [selectedOption, setSelectedOption] = useState("");
   const location = useLocation();
@@ -23,50 +20,30 @@ const PollQuestion = ({
     setSelectedOption(e.target.value);
   };
 
-  function saveQuestionAnswer({ authUser, qid, answer }) {
-    return (dispatch) => {
-      return new Promise((resolve, reject) => {
-        if (!authedUser || !qid || !answer) {
-          reject("Please provide authedUser, qid, and answer");
-        }
-
-        setTimeout(() => {
-          // Update the necessary state here
-          updateQuestionAnswer(authedUser, qid, answer);
-          updateUserAnswer(authedUser, qid, answer);
-
-          resolve(true);
-        }, 1000);
-      });
-    };
-  }
   const handleAnswerSubmit = async (e) => {
     e.preventDefault();
-    console.log("Selected option: ", selectedOption);
-
-    try {
-      await saveQuestionAnswer({
-        authedUser,
-        qid: qId,
-        answer: selectedOption,
-      })(dispatch, updateQuestionAnswer, updateUserAnswer);
-    } catch (error) {
-      console.error(error);
-      // Handle error, such as displaying an error message
+    try{
+      handleUserAnswer(authedUser, qId, selectedOption);
+    }
+    catch(e) {
+      console.log("Failed to save answer: ", e.message)
     }
     navigate("/");
   };
 
   return (
-    <div className="row">
-      <p className="display-6">Would you rather...</p>
+    <form onSubmit={handleAnswerSubmit} className="text-md-start">
 
-      <form onSubmit={handleAnswerSubmit}>
-        <div className="mb-3 col-md-8">
-          <label>
+    <div className="row justify-content-center text-md-start">
+      <p className="fw-medium text-center">Poll by {questions[qId].author}</p>
+      <img src={users[questions[qId].author].avatarURL} style={{width: '10%', borderRadius: "100%"}} />
+      <p className="fw-bold text-center fs-6 mt-2 mb-5">Would You Rather</p>
+        
+        <div className=" text-md-start text-center mb-4">
+          <label className="text-capitalize fw-semibold text-start">
             <input
               disabled={completed.includes(qId)}
-              className="me-4"
+              className="me-2"
               type="radio"
               name="option"
               value="optionOne"
@@ -75,12 +52,11 @@ const PollQuestion = ({
             />
             {questions[qId].optionOne.text}
           </label>
-        </div>
-        <div className="mb-3 col-md-8">
-          <label>
+          <br />
+          <label className="text-capitalize fw-semibold">
             <input
               disabled={completed.includes(qId)}
-              className="me-4"
+              className="me-2"
               type="radio"
               name="option"
               value="optionTwo"
@@ -89,21 +65,29 @@ const PollQuestion = ({
             />
             {questions[qId].optionTwo.text}
           </label>
-        </div>
+          </div>
+          
         <button
           type="submit"
-          className="btn btn-primary btn-lg col-md-8"
+          className="btn btn-primary"
           disabled={!selectedOption}
         >
           Submit Answer
         </button>
-      </form>
     </div>
+    </form>
   );
 };
 
 const mapStateToProps = ({ questions, users, authedUser }) => {
+
+  console.log("questions:", questions);
+  console.log("users:", users);
+  console.log("authedUser:", users[authedUser]);
   const { answers } = users[authedUser];
+
+  console.log("Answers:", users[authedUser].answers);
+
   const completed = Object.keys(answers)
     .map((key) => questions[key])
     .sort((a, b) => b.timestamp - a.timestamp)
@@ -114,17 +98,19 @@ const mapStateToProps = ({ questions, users, authedUser }) => {
     .filter(({ id }) => !completed.includes(id))
     .map(({ id }) => id);
 
+
+
   return {
     completed,
     unanswered,
     authedUser,
     questions,
+    users
   };
 };
 
 const mapDispatchToProps = {
-  updateQuestionAnswer,
-  updateUserAnswer,
+  handleUserAnswer,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PollQuestion);

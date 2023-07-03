@@ -15,13 +15,13 @@ export default function LeaderCard({ leader }) {
           <div className="card-body">
             <h5 className="card-title">{leader.name}</h5>
             <p className="card-text">
-              Asked:
+              Voted:
               <span class="badge bg-primary rounded-pill ms-2">
                 {Object.keys(leader.answers).length}
               </span>
             </p>
             <p className="card-text">
-              Voted:
+              Asked:
               <span class="badge bg-primary rounded-pill ms-2">
                 {Object.keys(leader.questions).length}
               </span>

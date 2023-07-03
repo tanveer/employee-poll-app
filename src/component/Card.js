@@ -2,27 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
-const formatDate = (timestamp) => {
-  const date = new Date(timestamp);
-  const day = date.getDay();
-  const month = date.getMonth();
-  const year = date.getFullYear();
-  let hours = date.getHours();
-  let minutes = date.getMinutes();
-  const seconds = date.getSeconds();
-  let amPm = hours >= 12 ? "PM" : "AM";
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  hours = hours % 12;
-  hours = hours ? hours : 12;
-  const timeStr = `${hours}:${minutes} ${amPm}`;
-  return `${timeStr} | ${day}/${month}/${year}`;
-};
-
 function Card({ questions, users, qId}) {
   return (
     <div className="card mb-3 me-3" style={{ width: "18rem" }}>
       <img
-        className="rounded-circle align-self-center"
+        className="rounded-circle align-self-center mt-3"
         style={{ width: 75 }}
         src={users[questions[qId].author].avatarURL}
       />

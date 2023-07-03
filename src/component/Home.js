@@ -29,7 +29,7 @@ function Home({ unanswered, completed, authedUser, questions }) {
         </div>
       ) : (
         <div className="row">
-          <p className="card-text h5">Unanswered Polls</p>
+          <p className="card-text h5">{unanswered.length === 0 ? "You have answered all poll questions" : "Unanswered Polls" }</p>
 
           {unanswered.map((qId) => (
             <Card key={qId} className="col" qId={qId} />
@@ -42,7 +42,6 @@ function Home({ unanswered, completed, authedUser, questions }) {
 
 const mapStateToProps = ({ questions, users, authedUser }) => {
   const { answers } = users[authedUser];
-  console.log("Answered: ", answers);
   const completed = Object.keys(answers)
     .map((key) => questions[key])
     .sort((a, b) => b.timestamp - a.timestamp)

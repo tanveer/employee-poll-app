@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { connect } from "react-redux";
-import { _saveQuestion } from "../_DATA";
 import { useNavigate } from "react-router-dom";
-import { saveNewPollQuestion } from "../Redux/questionActions";
+import { handleSaveNewPollQuestion } from "../actions/shared";
 
 const NewPoll = ({ authedUser, dispatch }) => {
   const [optionOne, setOptionOne] = useState("");
@@ -24,16 +23,9 @@ const NewPoll = ({ authedUser, dispatch }) => {
 
   const handleNewPoll = async (e) => {
     e.preventDefault();
-
-    const question = {
-      optionOneText: optionOne,
-      optionTwoText: optionTwo,
-      author: authedUser,
-    };
-
+    console.log('New Poll: ', optionOne, optionTwo);
     try {
-      const newQuestion = await _saveQuestion(question);
-      dispatch(saveNewPollQuestion(newQuestion));
+      dispatch(handleSaveNewPollQuestion(optionOne, optionTwo));
       // send user back to home page
     } catch (error) {
       console.error(error);

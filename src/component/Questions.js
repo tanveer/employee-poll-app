@@ -12,8 +12,8 @@ const Questions = ({ questions }) => {
   );
 };
 
-const mapStateToProps = ({ users, authUser }) => {
-  const questions = users[authUser].questions;
+const mapStateToProps = ({ users, authedUser }) => {
+  const questions = users[authedUser].questions;
   return { questions };
 };
 

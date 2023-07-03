@@ -24,8 +24,8 @@ const Profile = ({ user }) => {
   );
 };
 
-const mapStateToProps = ({ users, authUser }) => {
-  const user = users[authUser];
+const mapStateToProps = ({ users, authedUser }) => {
+  const user = users[authedUser];
 
   return { user };
 };
