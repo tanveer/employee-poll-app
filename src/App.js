@@ -12,21 +12,17 @@ import Leaderboard from "./component/Leaderboard";
 import Profile from "./component/Profile";
 
 function App({ users, authedUser, handleInitialData }) {
-
   const getAllData = async () => {
     await handleInitialData();
-  }
+  };
   useEffect(() => {
     getAllData();
-    return (
-      console.log('Done fetching intial data...')
-    )
+    return console.log("Done fetching intial data...");
   }, []);
-
 
   return (
     <div className="container">
-      { users && <Navbar />}
+      {users && <Navbar data-testid="navabar-component" />}
       <Routes>
         <Route path="/new_poll" element={authedUser && <NewPoll />} />
         <Route path="/" element={authedUser && <Home />} />

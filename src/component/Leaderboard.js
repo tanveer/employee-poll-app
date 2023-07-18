@@ -3,7 +3,7 @@ import LeaderCard from "./LeaderCard";
 
 const Leaderboard = ({ leaders }) => {
   return (
-    <ul>
+    <ul data-testid="leaderboard-component">
       <p className="display-6">Leaderboard</p>
       {leaders.map((leader) => (
         <li key={leader.id} className="list-group-item">

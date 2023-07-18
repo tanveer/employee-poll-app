@@ -13,7 +13,7 @@ function Navbar({ authedUser, users, dispatch }) {
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
               <Link to="/" className="nav-link active" aria-current="page">
-                Home
+                Poll
               </Link>
             </li>
             <li className="nav-item">
@@ -87,7 +87,7 @@ function Navbar({ authedUser, users, dispatch }) {
 const mapStateToProps = ({ users, authedUser }) => {
   return {
     users,
-    authedUser
+    authedUser,
   };
 };
 

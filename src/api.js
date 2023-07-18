@@ -1,4 +1,9 @@
-import { _getUsers, _getQuestions, _saveQuestion, _saveQuestionAnswer } from "./_DATA"
+import {
+  _getUsers,
+  _getQuestions,
+  _saveQuestion,
+  _saveQuestionAnswer,
+} from "./_DATA";
 
 export function getInitialData() {
   console.log("Fetching initial data...");
@@ -13,24 +18,21 @@ export function getInitialData() {
     });
 }
 
-export function saveNewQuestion(authedUser, optionOne, optionTwo) {
+export async function saveNewQuestion(authedUser, optionOne, optionTwo) {
   const question = {
     author: authedUser,
     optionOneText: optionOne,
-    optionTwoText: optionTwo
+    optionTwoText: optionTwo,
   };
 
-  return _saveQuestion(question)
-    .then(savedQuestion => {
-      return savedQuestion;
-    })
-    .catch(e => {
-      console.log('Error when trying to save new question: ', e.message);
-    });
+  try {
+    const savedQuestion = await _saveQuestion(question);
+    return savedQuestion;
+  } catch (e) {
+    console.log("Error when trying to save new question: ", e);
+  }
 }
 
 export function answerPollQuestion(authedUser, id, answer) {
-  _saveQuestionAnswer(authedUser, id, answer)
+  _saveQuestionAnswer(authedUser, id, answer);
 }
-
-
